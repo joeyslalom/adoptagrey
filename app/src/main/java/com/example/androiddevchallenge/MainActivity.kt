@@ -18,11 +18,28 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -30,17 +47,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                Overview(pokemonData)
             }
         }
     }
 }
 
-// Start building your app here!
 @Composable
-fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+fun Overview(pokemon: List<Pokemon>) {
+    LazyColumn {
+        items(pokemon) { PokemonCard(it) }
     }
 }
 
@@ -48,7 +64,7 @@ fun MyApp() {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp()
+        Overview(pokemonData)
     }
 }
 
@@ -56,6 +72,53 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp()
+        Overview(pokemonData)
+    }
+}
+
+@Preview("Light Theme card")
+@Composable
+fun CardPreview() {
+    MyTheme {
+        PokemonCard(pokemonData[3])
+    }
+}
+
+@Preview("Dark Theme card")
+@Composable
+fun DarkCardPreview() {
+    MyTheme(darkTheme = true) {
+        PokemonCard(pokemonData[2])
+    }
+}
+
+@Composable
+fun PokemonCard(pokemon: Pokemon) {
+    Surface(
+        color = MaterialTheme.colors.primary,
+        contentColor = contentColorFor(MaterialTheme.colors.primary),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = pokemon.drawableId),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(240.dp)
+                    .clip(shape = RoundedCornerShape(2.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(pokemon.name)
+                Text(pokemon.location)
+            }
+        }
     }
 }
