@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             MyTheme {
                 Overview(pokemonData)
+                // Detail(pokemonData[1])
             }
         }
     }
